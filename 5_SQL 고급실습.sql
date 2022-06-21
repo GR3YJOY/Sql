@@ -1,7 +1,7 @@
 #날짜: 2022/06/15
 #이름: 조귀애
 #내용: SQL 고급실습
-
+ 
 #실습하기 5-1
 CREATE TABLE `Member` (
    `uid`    VARCHAR(10) PRIMARY KEY,
@@ -158,9 +158,129 @@ FROM
 WHERE
    `year`=2020;
 
+#실습하기 5-6
+SELECT SUM(`sale`) AS `합계` FROM `Sales`;
+SELECT AVG(`sale`) AS `평균` FROM `Sales`;
+SELECT COUNT(*) AS `갯수` FROM `Sales`;
+
+INSERT INTO `member` VALUES ('b101', '을지문덕', '010-5555-1234', '사장', 107, NOW());
+
+#확인문제1
+SELECT SUM(`sale`) AS `2018년 1월 총매출` 
+	FROM `Sales` 
+		WHERE `year`=2018 AND `month`=1;
+
+#확인문제2
+SELECT 
+	SUM(`sale`) AS `총합`, 
+	AVG(`sale`) AS `평균` 
+FROM 
+	`Sales` 
+WHERE 
+	`year`=2019 AND 
+	`month`=2   AND 
+	`sale` > 50000;
+
+#확인문제3
+SELECT 
+	MIN(`sale`) AS `최저`,  
+	MAX(`sale`) AS `최고`
+FROM 
+	`Sales` 
+WHERE 
+	`year` = 2020;
+
+
+# 날짜: 2022/06/16 (결석)
+
 #실습하기 5-7
+SELECT * FROM `Sales` GROUP BY `uid`;
+SELECT * FROM `Sales` GROUP BY `uid`, `year`; 
+SELECT `uid`, COUNT(*) AS `건수` FROM `Sales` GROUP BY `uid`;
+SELECT `uid`, SUM(sale) AS `합계` FROM `Sales` GROUP BY `uid`;
+SELECT `uid`, AVG(sale) AS `평균` FROM `Sales` GROUP BY `uid`;
+
+SELECT `uid`, `year`, SUM(`sale`) AS `합계`
+FROM `Sales`
+GROUP BY `uid`, `year`;
+
+SELECT `uid`, `year`, SUM(`sale`) AS `합계`
+FROM `Sales`
+GROUP BY `uid`, `year`
+ORDER BY `합계` DESC;
+
+SELECT `uid`, `year`, SUM(`sale`) AS `합계`
+FROM `Sales`
+WHERE `sale` >= 50000
+GROUP BY `uid`, `year`
+ORDER BY `합계` DESC;
+
+
 #실습하기 5-8
+SELECT `uid`, SUM(`sale`) AS `합계` FROM `Sales`
+GROUP BY `uid`
+HAVING SUM(sale) >= 200000;
+
+SELECT `uid`, `year`, SUM(`sale`) AS `합계`
+FROM `Sales`
+WHERE `sale` >=100000
+GROUP BY `uid`, `year`
+HAVING `합계` >= 200000
+ORDER BY `합계` DESC;
+
 #실습하기 5-9
+CREATE TABLE `Sales2` LIKE `Sales`;
+INSERT INTO `Sales2` SELECT * FROM `Sales`;
+UPDATE `Sales2` SET `year` = `year` + 3;
+
+SELECT * FROM `Sales` UNION SELECT * FROM `Sales2`;
+
+
+SELECT `uid`, `year`, SUM(`sale`) AS `합계`
+FROM `Sales`
+GROUP BY `uid`, `year`
+UNION 
+SELECT `uid`, `year`, SUM(`sale`) AS `합계`
+FROM `Sales2`
+GROUP BY `uid`, `year`
+ORDER BY `year` ASC, `합계` DESC;
+
 #실습하기 5-10
+SELECT * FROM `Sales` UNION ALL SELECT * FROM `Sales2`;
+
+
 #실습하기 5-11
+SELECT * 
+FROM `Sales` 
+JOIN `Member` 
+ON `Sales`.uid = `Member`.uid;
+
+SELECT 
+		a.seq,
+		a.uid,
+		a.year,
+		a.month,
+		a.sale,
+		b.name,
+		b.hp,
+		b.pos		
+FROM `Sales`  AS a
+JOIN `Member` AS b
+ON a.uid = b.uid;
+
+SELECT * 
+FROM `Sales`  AS a
+JOIN `Member` AS b
+USING(`uid`);
+
+SELECT * 
+FROM `Sales`      AS a
+JOIN `Member`     AS b  ON a.uid = b.uid
+JOIN `Department` AS c  ON b.dep = c.depNo;
+
+
+
+
+
 #실습하기 5-12
+
